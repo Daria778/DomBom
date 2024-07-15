@@ -1,0 +1,13 @@
+.photo {
+    position: relative;
+}
+
+.previous {
+    position: absolute;
+
+}
+
+.next {
+    position: absolute;
+    margin-left: 100px;
+}
