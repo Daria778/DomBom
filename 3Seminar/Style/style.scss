@@ -1,0 +1,179 @@
+$pink: lightpink;
+
+.wrp {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    display: flex;
+    gap: 10px;
+}
+
+@mixin transform ($scale: 1, $rotate: 45deg) {
+    transform: scale($scale) rotate($rotate);
+}
+
+
+.heart {
+    position: relative;
+    --size: 0.7em;
+    width: var(--size);
+    height: var(--size);
+
+    &__checkbox {
+        appearance: none;
+        position: absolute;
+        //background: rgba(yellow, .5);
+        top: calc(var(--size) * -.4);
+        left: calc(var(--size) * -.2);
+        width: calc(var(--size) * 1.5);
+        height: calc(var(--size) * 1.5);
+        z-index: 2;
+        cursor: pointer;
+        @include transform;
+
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover~.heart__icon {
+            @include transform($scale: 1.1)
+        }
+
+        &:checked~.heart__icon {
+            animation: heartAnimation forwards 1s;
+        }
+
+        //     &:checked ~ .heart__lines {
+
+        //       .heart__line {
+        //         animation: heartLines forwards 500ms;
+        //       }
+
+        //       .heart__line:nth-child(1) {
+        //         transform: rotate(60deg) translateX(-200px);
+        //       }
+
+        //       .heart__line:nth-child(2) {
+        //         transform: rotate(120deg) translateX(-200px);
+        //       }
+
+        //       .heart__line:nth-child(3) {
+        //         transform: rotate(180deg)translateX(-200px);
+        //       }
+
+        //       .heart__line:nth-child(4) {
+        //         transform: rotate(240deg) translateX(-200px);
+        //       }
+
+        //       .heart__line:nth-child(5) {
+        //         transform: rotate(300deg) translateX(-200px);
+        //       }
+
+        //       .heart__line:nth-child(6) {
+        //         transform: rotate(0deg) translateX(-200px);
+        //       }
+        //     }
+    }
+
+    &__icon {
+        width: var(--size);
+        height: var(--size);
+        background: $pink;
+        @include transform;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: transform 200ms ease-out;
+
+        &::before,
+        &::after {
+            content: '';
+            display: block;
+            background: inherit;
+            width: var(--size);
+            height: var(--size);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        &::before {
+            top: 0;
+            left: -50%;
+        }
+
+        &::after {
+            left: 0;
+            top: -50%;
+        }
+    }
+
+    //   &__lines {
+    //     position: absolute;
+    //     top: 50%;
+    //     left: 50%;
+    //     transform: translate(-50%, -100%);
+    //     width: 1em;
+    //     height: 1em;
+    //   }
+
+    //   &__line {
+    //     position: absolute;
+    //     width: 5em;
+    //     height: .5em;
+    //     background: red;
+    //     left: -4.5em; 
+    //     border-radius: 50% 15% 15% 50%;
+    //     transition: transform 400ms ease-in 200ms;
+    //     transform-origin: center right;
+    //     opacity: 0;
+    //   }
+
+    //   &__line:nth-child(1) {
+    //     transform: rotate(60deg) translateX(0);
+    //   }
+
+    //   &__line:nth-child(2) {
+    //     transform: rotate(120deg) translateX(0);
+    //   }
+
+    //   &__line:nth-child(3) {
+    //     transform: rotate(180deg)translateX(0);
+    //   }
+
+    //   &__line:nth-child(4) {
+    //     transform: rotate(240deg) translateX(0);
+    //   }
+
+    //   &__line:nth-child(5) {
+    //     transform: rotate(300deg) translateX(0);
+    //   }
+
+    //   &__line:nth-child(6) {
+    //     transform: rotate(0deg) translateX(0);
+    //   }
+}
+
+@keyframes heartAnimation {
+    0% {
+        @include transform($scale: 1.1);
+    }
+
+    25% {
+        @include transform($scale: .7);
+    }
+
+    45% {
+        @include transform($scale: 1.4);
+        background: red;
+    }
+
+    70% {
+        @include transform($scale: 1);
+        background: red;
+    }
+
+    100% {
+        @include transform($scale: 1.1);
+        background: red;
+    }
+}
