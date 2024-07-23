@@ -1,15 +1,16 @@
 const conteinerEl = document.querySelector('.photoConteiner')
+
 const key = "photoKey"
-let id = 0
-let counter = 1
+const info = [{ photoID: 0 }]
+if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, JSON.stringify(info))
+};
+
 let isfetch = false
-const getData = async (pages) => {
+const getData = async () => {
     try {
         isfetch = true
-        const response = await fetch(`https://api.unsplash.com/photos/random/?page=${pages}`, {
-            headers: {
-                Authorization: 'Client-ID 67YCHSfI102HPpkC-pNNncYEP8tkg2exWUHW72eGVvQ'
-            }
+        const response = await fetch(`https://api.unsplash.com/photos/random?client_id=67YCHSfI102HPpkC-pNNncYEP8tkg2exWUHW72eGVvQ`, {
         });
         return await response.json()
 
@@ -24,18 +25,20 @@ const getData = async (pages) => {
 
 };
 const newPhotoPage = async () => {
-    const data = await getData(counter)
-    let strPrhoto = createCard(data);
-
+    const data = await getData()
+    let id = JSON.parse(localStorage.getItem(key)).length - 1
+    console.log(id);
+    let strPrhoto = createCard(data, id);
     conteinerEl.innerHTML = strPrhoto;
+    picDataSave(data, id);
 
 
 };
 
-const createCard = (photoAbout) => {
+const createCard = (photoAbout, id) => {
     return `<img class='photo' src="${photoAbout.urls.regular}" alt="">
-    <div class="wrp">
-        <div class="author">Хороший человек</div>
+    <div class="wrp" id=${id}>
+        <div class="author">${photoAbout.user.name}</div>
           <div class="heart">
         <input type="checkbox" class="heart__checkbox">
         <div class="heart__icon"></div>
@@ -57,32 +60,54 @@ const createCard = (photoAbout) => {
 //         conteinerEl.insertAdjacentHTML("beforeend", strPrhoto);
 //     }
 // })
-const picDataSave = (link, like, author) => {
+const picDataSave = (data, phtoID) => {
+    let b = JSON.parse(localStorage.getItem(key));
     const p = {
-        id: id,
-        picLink: link,
-        likes: like,
-        author: author
+        id: phtoID,
+        picLink: data.urls.regular,
+        likes: data.likes,
+        author: data.user.name
     }
-    localStorage.setItem(key, JSON.stringify(p))
+    b.push(p);
+    console.log(b);
+    localStorage.setItem(key, JSON.stringify(b))
+
 }
 
 document.addEventListener("DOMContentLoaded", newPhotoPage())
 
 
 conteinerEl.addEventListener('click', (e) => {
+    const dataJs = JSON.parse(localStorage.getItem(key));
+
     if (e.target.classList.contains('liked')) {
-        let p = Number(e.target.closest(".wrp").querySelector(".likeNum").textContent)
-        p -= 1
-        e.target.closest(".wrp").querySelector('.likeNum').textContent = p;
-        e.target.classList.remove('liked')
+        const getId = +e.target.closest(".wrp").getAttribute("id");
+        dataJs.forEach(el => {
+            if (getId == el.id) {
+                el.likes -= 1;
+                localStorage.setItem(key, JSON.stringify(dataJs));
+                let p = Number(e.target.closest(".wrp").querySelector(".likeNum").textContent)
+                p -= 1;
+                e.target.closest(".wrp").querySelector('.likeNum').textContent = p;
+                e.target.classList.remove('liked')
+            };
+        })
     }
     else {
         if (e.target.classList.contains('heart__checkbox')) {
-            let p = Number(e.target.closest(".wrp").querySelector(".likeNum").textContent)
-            p += 1
-            e.target.closest(".wrp").querySelector('.likeNum').textContent = p;
-            e.target.classList.add('liked')
+            const getId = +e.target.closest(".wrp").getAttribute("id");
+
+            dataJs.forEach(el => {
+                if (getId == el.id) {
+                    console.log("object");
+                    el.likes += 1;
+                    localStorage.setItem(key, JSON.stringify(dataJs));
+                    let p = Number(e.target.closest(".wrp").querySelector(".likeNum").textContent)
+                    p += 1;
+                    e.target.closest(".wrp").querySelector('.likeNum').textContent = p;
+                    e.target.classList.add('liked')
+                };
+            })
         };
     }
 
