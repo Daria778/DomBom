@@ -7,10 +7,5 @@ storageData.forEach(element => {
         `<img class='photo' src="${element.picLink}" alt="">
     <div class="wrp" id=${element.id}>
         <div class="author">${element.author}</div>
-          <div class="heart">
-        <input type="checkbox" class="heart__checkbox">
-        <div class="heart__icon"></div>
-    </div>
-    <span class = "likeNum">${element.likes}</span>
         </div>`);
 });
